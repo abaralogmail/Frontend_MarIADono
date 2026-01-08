@@ -1,156 +1,160 @@
 
-import React, { useState } from 'react';
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  PieChart, Pie, Cell 
-} from 'recharts';
-import { mockMetrics } from '../services/mockData';
-import { COLORS as WA_COLORS } from '../constants';
+import React, { useState, useMemo } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line } from 'recharts';
+import { incomingPeriodData, bulkPeriodData } from '../services/mockData';
 
 const Metrics: React.FC = () => {
-  const [timeframe, setTimeframe] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
+  const [activeTab, setActiveTab] = useState<'incoming' | 'bulk'>('incoming');
+  const [chartType, setChartType] = useState<'bar' | 'line'>('bar');
 
-  const funnelData = [
-    { name: 'Atención', value: 4500, fill: '#128C7E' },
-    { name: 'Consideración', value: 3200, fill: '#25D366' },
-    { name: 'Compra', value: 1200, fill: '#34B7F1' },
-    { name: 'Fidelización', value: 800, fill: '#075E54' },
-  ];
+  const combinedData = useMemo(() => {
+    return incomingPeriodData.map((inc, i) => ({
+      name: inc.period.replace('2025-', '').replace('2024-', ''),
+      Incoming: inc.volume,
+      Bulk: bulkPeriodData[i]?.volume || 0,
+    }));
+  }, []);
 
-  const activityData = [
-    { day: 'Lun', bot: 450, agent: 120 },
-    { day: 'Mar', bot: 520, agent: 150 },
-    { day: 'Mie', bot: 480, agent: 110 },
-    { day: 'Jue', bot: 610, agent: 190 },
-    { day: 'Vie', bot: 590, agent: 210 },
-    { day: 'Sab', bot: 320, agent: 80 },
-    { day: 'Dom', bot: 280, agent: 40 },
-  ];
-
-  const COLORS = ['#128C7E', '#25D366', '#34B7F1', '#075E54'];
+  const TableHeader = () => (
+    <thead>
+      <tr className="bg-[#f0f2f5] border-b border-[#d1d7db]">
+        <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">Período</th>
+        <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">Volumen</th>
+        <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">% del Total</th>
+        <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">Tendencia</th>
+      </tr>
+    </thead>
+  );
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      <header className="flex justify-between items-end">
+    <div className="space-y-8 animate-fadeIn pb-10 flex flex-col min-h-full">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 px-2 shrink-0">
         <div>
-          <h1 className="text-3xl font-black text-[#075e54] tracking-tighter uppercase">Inteligencia de Datos</h1>
-          <p className="text-[#667781] font-medium italic mt-1">Análisis profundo de n8n_metrics y rendimiento operativo</p>
+          <h1 className="text-3xl font-black text-[#075e54] tracking-tighter uppercase leading-none">Métricas de Performance</h1>
+          <p className="text-[#667781] font-bold text-[10px] uppercase tracking-[0.2em] mt-2">Comparativa de Canales: Incoming vs BulkMessage</p>
         </div>
-        <div className="flex bg-[#f0f2f5] p-1 rounded-xl border border-[#d1d7db]">
-          {['daily', 'weekly', 'monthly'].map((t) => (
-            <button
-              key={t}
-              onClick={() => setTimeframe(t as any)}
-              className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-                timeframe === t ? 'bg-white text-[#128C7E] shadow-sm' : 'text-[#667781] hover:text-[#075e54]'
-              }`}
-            >
-              {t === 'daily' ? 'Hoy' : t === 'weekly' ? 'Semana' : 'Mes'}
-            </button>
-          ))}
+        <div className="flex bg-[#f0f2f5] p-1.5 rounded-2xl border border-[#d1d7db] shadow-sm">
+          <button 
+            onClick={() => setActiveTab('incoming')}
+            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'incoming' ? 'bg-[#128C7E] text-white shadow-md' : 'text-[#667781] hover:text-[#075e54]'}`}
+          >
+            Incoming
+          </button>
+          <button 
+            onClick={() => setActiveTab('bulk')}
+            className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'bulk' ? 'bg-[#128C7E] text-white shadow-md' : 'text-[#667781] hover:text-[#075e54]'}`}
+          >
+            BulkMessage
+          </button>
         </div>
       </header>
 
-      {/* KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {mockMetrics.map((m, idx) => (
-          <div key={idx} className="bg-white p-6 rounded-3xl border border-[#d1d7db] shadow-sm hover:shadow-md transition-all">
-            <p className="text-[10px] font-black text-[#667781] uppercase tracking-[0.2em] mb-2">{m.label}</p>
-            <div className="flex items-center justify-between">
-              <span className="text-3xl font-black text-slate-900">{m.value}</span>
-              <span className={`text-[10px] font-bold px-2 py-1 rounded-lg ${
-                m.trend === 'up' ? 'bg-[#dcf8c6] text-[#075e54]' : 'bg-slate-50 text-slate-500'
-              }`}>
-                {m.change}
-              </span>
-            </div>
+      {/* Visualización Gráfica Comparativa */}
+      <div className="bg-white rounded-[2.5rem] border border-[#d1d7db] p-8 shadow-sm shrink-0">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Comparativa de Tráfico</h3>
+            <p className="text-[10px] font-bold text-[#667781] uppercase tracking-widest">Evolución Temporal Combinada</p>
           </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Actividad Bot vs Agente */}
-        <div className="bg-white p-8 rounded-[2.5rem] border border-[#d1d7db] shadow-sm">
-          <h3 className="text-xl font-black text-[#075e54] mb-6 tracking-tight">Carga de Trabajo: Bot vs Agente</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={activityData}>
+          <div className="flex bg-slate-100 p-1 rounded-lg">
+            <button 
+              onClick={() => setChartType('bar')}
+              className={`p-2 rounded-md transition-all ${chartType === 'bar' ? 'bg-white text-[#128C7E] shadow-sm' : 'text-slate-400'}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="M7 16v-4"/><path d="M11 16V9"/><path d="M15 16V5"/><path d="M19 16v-7"/></svg>
+            </button>
+            <button 
+              onClick={() => setChartType('line')}
+              className={`p-2 rounded-md transition-all ${chartType === 'line' ? 'bg-white text-[#128C7E] shadow-sm' : 'text-slate-400'}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m19 20-4-4-4 4-4-4-4 4"/><path d="M3 3v18h18"/></svg>
+            </button>
+          </div>
+        </div>
+        
+        <div className="h-72 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            {chartType === 'bar' ? (
+              <BarChart data={combinedData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f2f5" />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#667781', fontSize: 10, fontWeight: 700}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#667781', fontSize: 10, fontWeight: 700}} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#667781', fontSize: 10, fontWeight: 800}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#667781', fontSize: 10, fontWeight: 800}} />
                 <Tooltip 
-                  cursor={{fill: '#f0f2f5'}}
-                  contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 'bold'}}
+                  cursor={{fill: '#f8fafc'}}
+                  contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} 
                 />
-                <Bar dataKey="bot" name="Maria AI" fill="#128C7E" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="agent" name="Agente Humano" fill="#25D366" radius={[4, 4, 0, 0]} />
+                <Legend iconType="circle" wrapperStyle={{paddingTop: '20px', fontSize: '10px', fontWeight: 900, textTransform: 'uppercase'}} />
+                <Bar dataKey="Bulk" fill="#128C7E" radius={[4, 4, 0, 0]} barSize={20} />
+                <Bar dataKey="Incoming" fill="#34B7F1" radius={[4, 4, 0, 0]} barSize={20} />
               </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Embudo de Conversión */}
-        <div className="bg-white p-8 rounded-[2.5rem] border border-[#d1d7db] shadow-sm">
-          <h3 className="text-xl font-black text-[#075e54] mb-6 tracking-tight">Embudo de Fidelización</h3>
-          <div className="h-80 flex items-center">
-            <div className="flex-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={funnelData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {funnelData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="w-1/2 space-y-4">
-              {funnelData.map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.fill }}></div>
-                    <span className="text-xs font-bold text-slate-600">{item.name}</span>
-                  </div>
-                  <span className="text-xs font-black text-slate-900">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+            ) : (
+              <LineChart data={combinedData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f2f5" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#667781', fontSize: 10, fontWeight: 800}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#667781', fontSize: 10, fontWeight: 800}} />
+                <Tooltip contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
+                <Legend iconType="circle" wrapperStyle={{paddingTop: '20px', fontSize: '10px', fontWeight: 900, textTransform: 'uppercase'}} />
+                <Line type="monotone" dataKey="Bulk" stroke="#128C7E" strokeWidth={4} dot={{r: 4, strokeWidth: 2, fill: 'white'}} activeDot={{r: 6}} />
+                <Line type="monotone" dataKey="Incoming" stroke="#34B7F1" strokeWidth={4} dot={{r: 4, strokeWidth: 2, fill: 'white'}} activeDot={{r: 6}} />
+              </LineChart>
+            )}
+          </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Eficiencia de Maria AI */}
-      <div className="bg-[#111b21] p-10 rounded-[2.5rem] text-white relative overflow-hidden border border-[#2a3942]">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#25D366]/5 rounded-full blur-3xl -mr-48 -mt-48"></div>
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-[#25D366]/10 rounded-full border border-[#25D366]/20 mb-6">
-              <span className="w-2 h-2 bg-[#25D366] rounded-full animate-pulse"></span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#25D366]">Reporte de eficiencia</span>
-            </div>
-            <h2 className="text-3xl font-black leading-tight mb-4">MarIADono ha resuelto el 34% de las consultas autónomamente.</h2>
-            <p className="text-[#667781] font-medium">Esto representa un ahorro operativo <span className="text-white font-bold"></span> este mes mediante la automatización de procesos n8n.</p>
-          </div>
-          <div className="flex items-center space-x-8">
-            <div className="text-center">
-              <p className="text-4xl font-black text-[#128C7E]">4.2s</p>
-              <p className="text-[10px] font-black text-[#667781] uppercase tracking-widest mt-2">SLA Respuesta</p>
-            </div>
-            <div className="w-px h-16 bg-[#2a3942]"></div>
-            <div className="text-center">
-              <p className="text-4xl font-black text-[#25D366]">92%</p>
-              <p className="text-[10px] font-black text-[#667781] uppercase tracking-widest mt-2">Satisfacción</p>
-            </div>
-          </div>
+      {/* Contenedor de Tabla de Detalle */}
+      <div className="flex-1 min-h-0 bg-white rounded-[2.5rem] border border-[#d1d7db] shadow-sm overflow-hidden flex flex-col">
+        <div className="p-8 border-b border-[#f0f2f5] flex justify-between items-center bg-white sticky top-0 z-10">
+           <div className="flex items-center space-x-3">
+              <div className={`w-3 h-3 rounded-full ${activeTab === 'incoming' ? 'bg-[#34B7F1]' : 'bg-[#128C7E]'}`}></div>
+              <h3 className="text-lg font-black text-slate-900 tracking-tight uppercase">
+                {activeTab === 'incoming' ? 'Incoming - Análisis Detallado' : 'BulkMessage - Análisis Detallado'}
+              </h3>
+           </div>
+           <div className="text-right">
+              <p className="text-[10px] font-black text-[#667781] uppercase tracking-widest">Total Acumulado</p>
+              <p className="text-xl font-black text-slate-900">{activeTab === 'incoming' ? '40,361' : '49,833'}</p>
+           </div>
+        </div>
+        
+        <div className="flex-1 overflow-auto scrollbar-thin">
+          <table className="w-full text-left border-collapse">
+            <TableHeader />
+            <tbody className="divide-y divide-[#f0f2f5]">
+              {(activeTab === 'incoming' ? incomingPeriodData : bulkPeriodData).map((row, idx) => (
+                <tr key={idx} className="hover:bg-[#f5f6f6] transition-colors group">
+                  <td className="px-8 py-4">
+                    <span className="text-xs font-black text-slate-900 group-hover:text-[#128C7E] transition-colors">{row.period}</span>
+                  </td>
+                  <td className="px-8 py-4">
+                    <span className="text-sm font-bold text-slate-700">{row.volume.toLocaleString()}</span>
+                  </td>
+                  <td className="px-8 py-4">
+                    <div className="flex items-center space-x-3">
+                       <div className="w-20 h-1.5 bg-[#f0f2f5] rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${activeTab === 'incoming' ? 'bg-[#34B7F1]' : 'bg-[#128C7E]'}`} 
+                            style={{ width: row.percent }}
+                          ></div>
+                       </div>
+                       <span className="text-[10px] font-black text-slate-500">{row.percent}</span>
+                    </div>
+                  </td>
+                  <td className="px-8 py-4">
+                    <span className={`text-[10px] font-black uppercase tracking-tight ${row.color}`}>
+                      {row.trend}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+              <tr className="bg-[#fcfcfc] font-black border-t-2 border-[#d1d7db] sticky bottom-0">
+                 <td className="px-8 py-6 text-sm uppercase text-slate-900">Total</td>
+                 <td className="px-8 py-6 text-lg text-[#128C7E]">{activeTab === 'incoming' ? '40,361' : '49,833'}</td>
+                 <td className="px-8 py-6 text-sm text-slate-500">100%</td>
+                 <td className="px-8 py-6 text-xs text-slate-300">-</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
