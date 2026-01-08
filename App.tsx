@@ -9,6 +9,7 @@ import Scheduling from './components/Scheduling';
 import Metrics from './components/Metrics';
 import Segments from './components/Segments';
 import Import from './components/Import';
+import AdvancedAnalytics from './components/AdvancedAnalytics';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
@@ -29,6 +30,8 @@ const App: React.FC = () => {
         return <Metrics />;
       case 'import':
         return <Import />;
+      case 'analytics':
+        return <AdvancedAnalytics />;
       default:
         return <Dashboard />;
     }
