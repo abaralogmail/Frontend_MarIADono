@@ -11,13 +11,15 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
   const menuItems = [
     { id: 'dashboard' as ViewType, label: 'Panel Control', icon: <ICONS.Dashboard /> },
+    { id: 'bi_logic' as ViewType, label: 'Cerebro de Datos', icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v10"/><path d="M18.4 4.6a10 10 0 1 1-12.8 0"/></svg>
+    )},
     { id: 'analytics' as ViewType, label: 'Inteligencia BI', icon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/><path d="M12 2v20"/><path d="m4.9 4.9 14.2 14.2"/><path d="m19.1 4.9-14.2 14.2"/></svg>
     )},
     { id: 'conversations' as ViewType, label: 'Conversaciones', icon: <ICONS.Chat /> },
     { id: 'campaigns' as ViewType, label: 'Campañas', icon: <ICONS.Campaigns /> },
     { id: 'segments' as ViewType, label: 'Segmentación', icon: <ICONS.Users /> },
-    { id: 'scheduling' as ViewType, label: 'Horarios', icon: <ICONS.Clock /> },
     { id: 'metrics' as ViewType, label: 'Métricas', icon: <ICONS.Analytics /> },
     { id: 'import' as ViewType, label: 'Base de Datos', icon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -36,25 +38,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
                 alt="MarIADono Logo" 
                 className="w-full h-full object-contain p-2"
               />
-              <div className="absolute bottom-1 right-1 w-10 h-10 bg-white rounded-full border-2 border-slate-100 shadow-xl flex flex-col overflow-hidden">
-                <div className="flex-1 bg-[#075E54] flex items-center justify-center p-0.5">
-                  <svg viewBox="0 0 24 24" className="w-full h-full text-white" fill="none" stroke="currentColor" strokeWidth="3">
-                    <path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19" strokeLinecap="round"/>
-                  </svg>
-                </div>
-                <div className="flex-1 bg-[#25D366] flex items-center justify-center p-0.5">
-                   <svg viewBox="0 0 24 24" className="w-full h-full text-white" fill="currentColor">
-                      <path d="M12 22l8-8H4l8 8z" />
-                   </svg>
-                </div>
-              </div>
             </div>
             <div className="absolute top-1 right-3 w-4 h-4 bg-[#25D366] rounded-full border-2 border-[#111b21] z-10 animate-pulse shadow-[0_0_8px_#25D366]"></div>
           </div>
           <div className="text-center">
             <h1 className="text-xl font-black text-white tracking-tighter leading-none mb-1 uppercase">MarIADono</h1>
-            <p className="text-[9px] text-[#25D366] font-black uppercase tracking-[0.2em] mb-2">
-              BI & Analytics
+            <p className="text-[9px] text-[#25D366] font-black uppercase tracking-[0.2em]">
+              Data Brain Engine
             </p>
           </div>
         </div>
@@ -80,12 +70,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         ))}
       </nav>
 
-      {/* Footer Branding */}
       <div className="p-4 mt-auto">
         <div className="bg-[#202c33] rounded-2xl p-4 border border-[#2a3942] flex items-center justify-between">
            <div>
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">Powered By</p>
-              <p className="text-xs font-bold text-[#25D366]">Ceridono BI</p>
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">Engine Status</p>
+              <p className="text-xs font-bold text-[#25D366]">Optimized</p>
            </div>
            <div className="w-2 h-2 bg-[#25D366] rounded-full animate-pulse"></div>
         </div>

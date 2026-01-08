@@ -10,6 +10,7 @@ import Metrics from './components/Metrics';
 import Segments from './components/Segments';
 import Import from './components/Import';
 import AdvancedAnalytics from './components/AdvancedAnalytics';
+import DataBrain from './components/DataBrain';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
@@ -32,6 +33,8 @@ const App: React.FC = () => {
         return <Import />;
       case 'analytics':
         return <AdvancedAnalytics />;
+      case 'bi_logic':
+        return <DataBrain />;
       default:
         return <Dashboard />;
     }

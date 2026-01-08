@@ -90,4 +90,4 @@ export interface ExcepcionHorario {
   descripcion: string;
 }
 
-export type ViewType = 'dashboard' | 'conversations' | 'campaigns' | 'segments' | 'scheduling' | 'metrics' | 'import' | 'analytics';
+export type ViewType = 'dashboard' | 'conversations' | 'campaigns' | 'segments' | 'scheduling' | 'metrics' | 'import' | 'analytics' | 'bi_logic';
