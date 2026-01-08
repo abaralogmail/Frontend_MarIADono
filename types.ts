@@ -1,5 +1,6 @@
 
-export type Role = 'cliente' | 'bot' | 'agent';
+// Fix: Updated Role type to match actual usage in components and mock data ('bot', 'agent', 'cliente')
+export type Role = 'bot' | 'agent' | 'cliente';
 
 export interface ConversationLog {
   id: string;
@@ -20,6 +21,25 @@ export interface Metric {
   value: string | number;
   change?: string;
   trend?: 'up' | 'down' | 'neutral';
+}
+
+export interface Segment {
+  id: string;
+  nombre: string;
+  color: string;
+  miembros: number;
+  conversion: number;
+  descripcion: string;
+  regla_activa: boolean;
+}
+
+export interface SegmentMember {
+  id: string;
+  nombre: string;
+  telefono: string;
+  score: number; // 0-100
+  ultimo_contacto: string;
+  segmentos: string[];
 }
 
 export interface Campaign {

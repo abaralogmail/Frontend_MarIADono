@@ -7,6 +7,8 @@ import Conversations from './components/Conversations';
 import Campaigns from './components/Campaigns';
 import Commerce from './components/Commerce';
 import Scheduling from './components/Scheduling';
+import Metrics from './components/Metrics';
+import Segments from './components/Segments';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
@@ -24,26 +26,16 @@ const App: React.FC = () => {
       case 'scheduling':
         return <Scheduling />;
       case 'segments':
-        return (
-          <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
-            <h2 className="text-2xl font-bold text-slate-900">Módulo de Segmentación</h2>
-            <p className="text-slate-500 mt-2 italic">Segmentación dinámica (customer_segments) en desarrollo...</p>
-          </div>
-        );
+        return <Segments />;
       case 'metrics':
-        return (
-          <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
-            <h2 className="text-2xl font-bold text-slate-900">Métricas de n8n & SLAs</h2>
-            <p className="text-slate-500 mt-2 italic">Integrando flujos de n8n_metrics y Reporting Avanzado...</p>
-          </div>
-        );
+        return <Metrics />;
       default:
         return <Dashboard />;
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-50 selection:bg-indigo-100 selection:text-indigo-700">
+    <div className="min-h-screen flex bg-[#F0F2F5] selection:bg-[#25D366]/20 selection:text-[#075e54]">
       <Sidebar currentView={currentView} setView={setCurrentView} />
       
       <main className="flex-1 ml-64 p-8 lg:p-12 transition-all duration-300 overflow-y-auto">
@@ -61,17 +53,27 @@ const App: React.FC = () => {
           animation: fadeIn 0.4s ease-out forwards;
         }
         ::-webkit-scrollbar {
-          width: 8px;
+          width: 6px;
         }
         ::-webkit-scrollbar-track {
-          background: #f1f5f9;
+          background: #f0f2f5;
         }
         ::-webkit-scrollbar-thumb {
-          background: #cbd5e1;
-          border-radius: 4px;
+          background: #ced0d1;
+          border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-          background: #94a3b8;
+          background: #bfc1c2;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0,0,0,0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(0,0,0,0.1);
+          border-radius: 10px;
         }
       `}</style>
     </div>

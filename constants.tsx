@@ -2,11 +2,20 @@
 import React from 'react';
 
 export const COLORS = {
-  primary: '#4f46e5', // indigo-600
-  secondary: '#10b981', // emerald-500
-  accent: '#f59e0b', // amber-500
-  danger: '#ef4444', // red-500
-  background: '#f8fafc', // slate-50
+  whatsapp: {
+    teal: '#128C7E',
+    tealDark: '#075E54',
+    green: '#25D366',
+    lightGreen: '#DCF8C6',
+    blue: '#34B7F1',
+    bgLight: '#F0F2F5',
+    chatBg: '#EFEAE2',
+  },
+  primary: '#128C7E', // WhatsApp Teal
+  secondary: '#25D366', // WhatsApp Green
+  accent: '#34B7F1', // WhatsApp Blue
+  danger: '#ef4444', 
+  background: '#F0F2F5',
 };
 
 export const ICONS = {
