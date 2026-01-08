@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewType } from '../types';
-import { ICONS, COLORS } from '../constants';
+import { ICONS } from '../constants';
 
 interface SidebarProps {
   currentView: ViewType;
@@ -13,22 +13,36 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
     { id: 'conversations' as ViewType, label: 'Conversaciones', icon: <ICONS.Chat /> },
     { id: 'campaigns' as ViewType, label: 'Campañas', icon: <ICONS.Campaigns /> },
     { id: 'segments' as ViewType, label: 'Segmentación', icon: <ICONS.Users /> },
-    { id: 'commerce' as ViewType, label: 'Ecommerce', icon: <ICONS.Store /> },
     { id: 'scheduling' as ViewType, label: 'Horarios', icon: <ICONS.Clock /> },
     { id: 'metrics' as ViewType, label: 'Métricas', icon: <ICONS.Analytics /> },
   ];
 
   return (
     <aside className="w-64 bg-[#111b21] h-screen fixed left-0 top-0 text-slate-300 flex flex-col z-20 transition-all duration-300 shadow-2xl border-r border-[#2a3942]">
-      {/* Branding con el Nuevo Logo SVG Externo */}
+      {/* Branding con el Nuevo Logo SVG Externo - Ruta Corregida */}
       <div className="p-8 border-b border-[#2a3942] bg-[#202c33]">
         <div className="flex flex-col items-center">
           <div className="relative group mb-4">
             <div className="w-24 h-24 rounded-full bg-white p-1 shadow-[0_0_20px_rgba(37,211,102,0.2)] border-2 border-[#25D366] flex items-center justify-center transition-transform duration-500 hover:scale-105 overflow-hidden">
               <img 
-                src="/assets/logo.svg" 
+                src="assets/logo.svg" 
                 alt="MarIADono Logo" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain p-2"
+                onError={(e) => {
+                  // Fallback robusto en caso de que el archivo SVG tenga errores internos
+                  e.currentTarget.style.display = 'none';
+                  const fallbackContainer = e.currentTarget.parentElement;
+                  if (fallbackContainer && !fallbackContainer.querySelector('.fallback-svg')) {
+                    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    svg.setAttribute("viewBox", "0 0 24 24");
+                    svg.setAttribute("class", "w-12 h-12 text-[#075E54] fallback-svg");
+                    svg.setAttribute("fill", "none");
+                    svg.setAttribute("stroke", "currentColor");
+                    svg.setAttribute("stroke-width", "2");
+                    svg.innerHTML = '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.3 8.5 8.5 0 0 1 5 1.5l3.5-1.5Z"/>';
+                    fallbackContainer.appendChild(svg);
+                  }
+                }}
               />
               
               {/* Badge Dinámico Interactivo */}

@@ -5,7 +5,6 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Conversations from './components/Conversations';
 import Campaigns from './components/Campaigns';
-import Commerce from './components/Commerce';
 import Scheduling from './components/Scheduling';
 import Metrics from './components/Metrics';
 import Segments from './components/Segments';
@@ -21,8 +20,6 @@ const App: React.FC = () => {
         return <Conversations />;
       case 'campaigns':
         return <Campaigns />;
-      case 'commerce':
-        return <Commerce />;
       case 'scheduling':
         return <Scheduling />;
       case 'segments':
@@ -35,11 +32,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F0F2F5] selection:bg-[#25D366]/20 selection:text-[#075e54]">
+    <div className="h-screen flex bg-[#F0F2F5] selection:bg-[#25D366]/20 selection:text-[#075e54] overflow-hidden">
       <Sidebar currentView={currentView} setView={setCurrentView} />
       
-      <main className="flex-1 ml-64 p-8 lg:p-12 transition-all duration-300 overflow-y-auto">
-        <div className="max-w-7xl mx-auto pb-12">
+      <main className="flex-1 ml-64 h-screen flex flex-col overflow-y-auto">
+        <div className="w-full max-w-7xl mx-auto px-6 py-8 flex-1 flex flex-col min-h-0">
           {renderContent()}
         </div>
       </main>
@@ -53,7 +50,7 @@ const App: React.FC = () => {
           animation: fadeIn 0.4s ease-out forwards;
         }
         ::-webkit-scrollbar {
-          width: 6px;
+          width: 5px;
         }
         ::-webkit-scrollbar-track {
           background: #f0f2f5;
@@ -66,10 +63,10 @@ const App: React.FC = () => {
           background: #bfc1c2;
         }
         .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
+          width: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(0,0,0,0.02);
+          background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: rgba(0,0,0,0.1);

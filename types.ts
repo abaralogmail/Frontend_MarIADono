@@ -1,4 +1,3 @@
-
 // Fix: Updated Role type to match actual usage in components and mock data ('bot', 'agent', 'cliente')
 export type Role = 'bot' | 'agent' | 'cliente';
 
@@ -90,4 +89,4 @@ export interface ExcepcionHorario {
   descripcion: string;
 }
 
-export type ViewType = 'dashboard' | 'conversations' | 'campaigns' | 'segments' | 'commerce' | 'scheduling' | 'metrics';
+export type ViewType = 'dashboard' | 'conversations' | 'campaigns' | 'segments' | 'scheduling' | 'metrics';

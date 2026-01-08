@@ -2,7 +2,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { mockConversations } from '../services/mockData';
 import { ConversationLog, Role } from '../types';
-import { COLORS } from '../constants';
 
 interface WhatsAppViewProps {
   logs: ConversationLog[];
@@ -35,6 +34,14 @@ const WhatsAppView: React.FC<WhatsAppViewProps> = ({ logs, onSendMessage }) => {
   const [newMessage, setNewMessage] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const suggestions = [
+    "¡Hola! ¿En qué puedo ayudarte hoy?",
+    "Claro, déjame revisar tu saldo de puntos.",
+    "Tu cupón de descuento ya está activo. 🎟️",
+    "Gracias por la ayuda.",
+    "Te envío el catálogo actualizado."
+  ];
+
   const activeConversation = useMemo(() => {
     return logs
       .filter(log => log.from === selectedContact)
@@ -49,8 +56,8 @@ const WhatsAppView: React.FC<WhatsAppViewProps> = ({ logs, onSendMessage }) => {
     scrollToBottom();
   }, [activeConversation]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSendMessage = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!newMessage.trim()) return;
     onSendMessage(selectedContact, newMessage);
     setNewMessage('');
@@ -59,79 +66,78 @@ const WhatsAppView: React.FC<WhatsAppViewProps> = ({ logs, onSendMessage }) => {
   const activeContactData = contacts.find(c => c.from === selectedContact);
 
   return (
-    <div className="flex h-[80vh] bg-white rounded-3xl overflow-hidden border border-[#d1d7db] shadow-2xl animate-fadeIn">
-      {/* Listado de Contactos CRM */}
-      <div className="w-1/3 border-r border-[#d1d7db] flex flex-col bg-white">
-        <div className="p-4 bg-[#f0f2f5] flex items-center justify-between border-b border-[#d1d7db]">
-          <div className="flex items-center space-x-3">
-             <div className="w-10 h-10 rounded-full bg-slate-300 overflow-hidden">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" alt="Admin" />
-             </div>
-             <div>
-                <h3 className="text-sm font-bold text-slate-900">Conversaciones</h3>
-                <p className="text-[10px] font-black text-[#128C7E] uppercase tracking-widest">Maria Business AI</p>
-             </div>
+    <div className="flex h-[calc(100vh-280px)] min-h-[500px] bg-white rounded-3xl overflow-hidden border border-[#d1d7db] shadow-xl animate-fadeIn">
+      {/* Sidebar de Contactos */}
+      <div className="w-80 border-r border-[#d1d7db] flex flex-col bg-white shrink-0">
+        <div className="p-4 bg-[#f0f2f5] border-b border-[#d1d7db] flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-slate-200">
+             <svg viewBox="0 0 24 24" className="w-6 h-6 text-[#25D366]" fill="currentColor">
+               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+             </svg>
+          </div>
+          <div className="min-w-0">
+             <h3 className="text-xs font-black text-slate-900 truncate">WhatsApp Business</h3>
+             <p className="text-[9px] font-bold text-[#128C7E] uppercase tracking-wider">Gestión Maria AI</p>
           </div>
         </div>
-        
-        <div className="flex-1 overflow-y-auto bg-white">
+        <div className="flex-1 overflow-y-auto">
           {contacts.map((contact) => (
             <div 
               key={contact.from}
               onClick={() => setSelectedContact(contact.from)}
-              className={`flex flex-col px-4 py-3 cursor-pointer border-b border-[#f0f2f5] transition-all ${selectedContact === contact.from ? 'bg-[#f0f2f5]' : 'hover:bg-[#f5f6f6]'}`}
+              className={`p-4 cursor-pointer border-b border-[#f0f2f5] transition-all ${selectedContact === contact.from ? 'bg-[#f0f2f5]' : 'hover:bg-[#f5f6f6]'}`}
             >
-              <div className="flex items-center mb-1">
-                <div className="w-12 h-12 rounded-full bg-slate-200 mr-3 flex-shrink-0 flex items-center justify-center font-black text-slate-500 overflow-hidden">
-                   <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${contact.pushname}`} alt={contact.pushname} />
+              <div className="flex items-center space-x-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-slate-200 shrink-0 overflow-hidden font-black text-slate-500 flex items-center justify-center">
+                   <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${contact.pushname}`} alt="" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center">
-                    <h4 className="font-bold text-slate-900 truncate text-sm">{contact.pushname}</h4>
+                    <p className="text-sm font-bold text-slate-900 truncate">{contact.pushname}</p>
                     <span className="text-[9px] text-[#667781] font-bold">{contact.time}</span>
                   </div>
                   <p className="text-xs text-[#667781] truncate">{contact.lastMessage}</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 mt-1">
-                <span className="px-2 py-0.5 bg-[#dcf8c6] text-[#075e54] text-[8px] font-black uppercase rounded-lg border border-[#c5e1a5]">{contact.etapa}</span>
-                <span className="px-2 py-0.5 bg-blue-50 text-[#128C7E] text-[8px] font-black uppercase rounded-lg border border-blue-100">{contact.interes}% Interés</span>
+              <div className="flex items-center space-x-2">
+                <span className="px-1.5 py-0.5 bg-[#dcf8c6] text-[#075e54] text-[8px] font-black uppercase rounded border border-[#c5e1a5]">{contact.etapa}</span>
+                <span className="text-[9px] font-bold text-[#128C7E]">{contact.interes}% Interés</span>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Área de Chat */}
-      <div className="flex-1 flex flex-col bg-[#efeae2] relative">
+      {/* Área Central del Chat */}
+      <div className="flex-1 flex flex-col bg-[#efeae2] relative overflow-hidden">
         {/* Chat Header */}
-        <div className="z-10 px-4 py-3 bg-[#f0f2f5] flex items-center justify-between border-b border-[#d1d7db] shadow-sm">
-          <div className="flex items-center">
-            <div className="w-10 h-10 rounded-full bg-slate-200 mr-3 overflow-hidden border border-slate-300">
-               <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${activeContactData?.pushname}`} alt="user" />
+        <div className="h-16 px-6 bg-[#f0f2f5] flex items-center justify-between border-b border-[#d1d7db] shrink-0 z-10">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-slate-200 shrink-0 overflow-hidden border border-slate-300">
+               <img src={`https://api.dicebear.com/7.x/initials/svg?seed=${activeContactData?.pushname}`} alt="" />
             </div>
             <div>
               <h4 className="text-sm font-bold text-slate-900">{activeContactData?.pushname}</h4>
-              <p className="text-[10px] text-[#667781] font-bold">últ. vez hoy a las {activeContactData?.time}</p>
+              <p className="text-[10px] text-[#667781] font-bold uppercase">En Línea</p>
             </div>
           </div>
-          <div className="flex space-x-4">
-             <button className="p-2 text-[#54656f] hover:text-[#128C7E] transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-             </button>
-             <button className="px-4 py-2 bg-[#128C7E] text-white rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md hover:bg-[#075e54] transition-all">
-                Cerrar Caso
-             </button>
+          <div className="flex items-center space-x-2">
+             <div className="px-3 py-1 bg-white rounded-full border border-slate-200 flex items-center space-x-2">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#25D366]" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                <span className="text-[10px] font-black text-slate-800 uppercase tracking-tighter">API Business</span>
+             </div>
           </div>
         </div>
 
-        {/* Mensajes */}
-        <div className="z-10 flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-[url('https://w0.peakpx.com/wallpaper/580/630/HD-wallpaper-whatsapp-background-whatsapp-theme-light.jpg')] bg-repeat">
+        {/* Área de Mensajes */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[url('https://w0.peakpx.com/wallpaper/580/630/HD-wallpaper-whatsapp-background-whatsapp-theme-light.jpg')] bg-repeat">
           {activeConversation.map((msg) => {
             const isBot = msg.role === 'bot' || msg.role === 'agent';
             return (
               <div key={msg.id} className={`flex ${isBot ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[70%] rounded-xl p-3 shadow-sm text-sm relative group ${isBot ? 'bg-[#dcf8c6] rounded-tr-none' : 'bg-white rounded-tl-none'}`}>
+                <div className={`max-w-[75%] rounded-2xl p-3 shadow-sm text-sm relative ${isBot ? 'bg-[#dcf8c6] rounded-tr-none' : 'bg-white rounded-tl-none'}`}>
                   {isBot && (
                     <div className="flex items-center space-x-1 mb-1 border-b border-black/5 pb-1">
                       <span className="text-[9px] font-black text-[#128C7E] uppercase tracking-widest">{msg.botname || 'Agente'}</span>
@@ -151,30 +157,67 @@ const WhatsAppView: React.FC<WhatsAppViewProps> = ({ logs, onSendMessage }) => {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Input */}
-        <div className="z-10 p-4 bg-[#f0f2f5] flex items-center space-x-3">
-          <button className="text-[#54656f] p-2 hover:bg-slate-200 rounded-full transition-all">
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          </button>
-          <div className="flex-1">
-            <input 
-              type="text" 
-              placeholder="Escribe un mensaje" 
-              className="w-full px-4 py-3 bg-white border-none rounded-xl text-sm outline-none shadow-sm"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage(e as any)}
-            />
+        {/* Input & Sugerencias */}
+        <div className="bg-[#f0f2f5] border-t border-[#d1d7db] shrink-0">
+          <div className="px-4 py-2 flex items-center space-x-2 overflow-x-auto no-scrollbar scroll-smooth">
+            <span className="shrink-0 text-[9px] font-black text-[#667781] uppercase tracking-tighter mr-2">Sugerencias:</span>
+            {suggestions.map((text, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setNewMessage(text)}
+                className="shrink-0 px-3 py-1.5 bg-white border border-[#d1d7db] hover:border-[#25D366] rounded-full text-[10px] font-bold text-slate-700 transition-all shadow-sm"
+              >
+                {text}
+              </button>
+            ))}
           </div>
-          <button 
-            onClick={handleSendMessage}
-            className={`p-3 rounded-full transition-all ${newMessage.trim() ? 'text-[#128C7E]' : 'text-[#54656f]'}`}
-            disabled={!newMessage.trim()}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
+
+          <div className="p-4 flex items-center space-x-3">
+            <button className="text-[#54656f] p-2 hover:bg-slate-200 rounded-full transition-all shrink-0">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </button>
+            <div className="flex-1">
+              <input 
+                type="text" 
+                placeholder="Escribe un mensaje" 
+                className="w-full px-4 py-3 bg-white border border-transparent focus:border-[#d1d7db] rounded-xl text-sm outline-none shadow-sm transition-all"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage(e as any)}
+              />
+            </div>
+            <button 
+              onClick={() => handleSendMessage()}
+              className={`p-3 rounded-full transition-all shrink-0 flex items-center justify-center ${
+                newMessage.trim() 
+                  ? 'bg-[#128C7E] text-white shadow-lg scale-105' 
+                  : 'bg-transparent text-[#54656f] opacity-40'
+              }`}
+              disabled={!newMessage.trim()}
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
+      
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 };
@@ -209,116 +252,101 @@ const Conversations: React.FC = () => {
       messageid: `wa-${Math.random().toString(36).substr(2, 9)}`,
       etapaembudo: contactInfo?.etapaembudo || 'Atención',
       interescliente: contactInfo?.interescliente || 50,
-      botname: 'Maria Fidelity AI'
+      botname: 'Agente Humano'
     };
 
     setLogs(prev => [...prev, newLog]);
   };
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+    <div className="flex flex-col space-y-6 animate-fadeIn h-full">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 shrink-0 px-2">
         <div>
-          <h1 className="text-3xl font-black text-[#075e54] tracking-tighter uppercase">Registro de Fidelización</h1>
-          <p className="text-[#667781] font-medium italic mt-1">Historial WhatsApp Business gestionado por Maria AI</p>
+          <h1 className="text-2xl font-black text-[#075e54] tracking-tighter uppercase">Conversaciones</h1>
+          <p className="text-[#667781] text-xs font-bold uppercase tracking-wider">Historial n8n_whatsapp_log</p>
         </div>
-        <div className="flex bg-[#f0f2f5] p-1.5 rounded-2xl border border-[#d1d7db]">
+        <div className="flex bg-white/50 p-1 rounded-2xl border border-[#d1d7db] backdrop-blur-sm shadow-sm">
           <button 
             onClick={() => setViewMode('table')}
-            className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'table' ? 'bg-white text-[#128C7E] shadow-md' : 'text-[#667781]'}`}
+            className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${viewMode === 'table' ? 'bg-[#128C7E] text-white shadow-md' : 'text-[#667781]'}`}
           >
-            VISTA TABLA
+            LISTADO
           </button>
           <button 
             onClick={() => setViewMode('whatsapp')}
-            className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'whatsapp' ? 'bg-[#128C7E] text-white shadow-md' : 'text-[#667781]'}`}
+            className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${viewMode === 'whatsapp' ? 'bg-[#128C7E] text-white shadow-md' : 'text-[#667781]'}`}
           >
             VISTA CHAT
           </button>
         </div>
       </header>
 
-      {/* Filtros */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-2 relative">
-          <input 
-            type="text" 
-            placeholder="Buscar por nombre o número (+E.164)..." 
-            className="w-full pl-12 pr-4 py-3 bg-white border border-[#d1d7db] rounded-xl text-sm font-bold focus:ring-2 focus:ring-[#25D366] outline-none transition-all shadow-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <svg className="absolute left-4 top-1/2 -translate-y-1/2 text-[#667781]" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        </div>
-        <select 
-          className="w-full px-4 py-3 bg-white border border-[#d1d7db] rounded-xl text-sm font-bold focus:ring-2 focus:ring-[#25D366] outline-none transition-all shadow-sm appearance-none"
-          value={selectedEtapa}
-          onChange={(e) => setSelectedEtapa(e.target.value)}
-        >
-          <option>Todas</option>
-          <option>Atención</option>
-          <option>Consideración</option>
-          <option>Compra</option>
-          <option>Post-Venta</option>
-        </select>
-      </div>
-
-      {viewMode === 'whatsapp' ? (
-        <WhatsAppView logs={filteredLogs} onSendMessage={handleSendMessage} />
-      ) : (
-        <div className="bg-white rounded-3xl border border-[#d1d7db] shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-[#f0f2f5] border-b border-[#d1d7db]">
-                  <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">Contacto</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">Embudo</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">Mensaje</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest">Interés</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-[#54656f] uppercase tracking-widest text-right">Fecha</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#f0f2f5]">
-                {filteredLogs.slice().reverse().map((log) => (
-                  <tr key={log.id} className="hover:bg-[#f5f6f6] transition-colors">
-                    <td className="px-8 py-5">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-[10px] ${
-                          log.role === 'bot' ? 'bg-[#dcf8c6] text-[#075e54]' : 'bg-blue-50 text-[#128C7E]'
-                        }`}>
-                          {log.pushname.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-sm font-black text-slate-900">{log.pushname}</p>
-                          <p className="text-[10px] text-[#667781] font-bold uppercase">{log.role}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className="px-3 py-1 bg-[#f0f2f5] text-[#54656f] text-[9px] font-black uppercase rounded-lg border border-[#d1d7db]">{log.etapaembudo}</span>
-                    </td>
-                    <td className="px-8 py-5">
-                      <p className="text-sm text-[#54656f] font-medium truncate max-w-xs">{log.body}</p>
-                    </td>
-                    <td className="px-8 py-5">
-                      <div className="flex items-center space-x-2">
-                        <div className="flex-1 w-16 bg-[#f0f2f5] h-1.5 rounded-full overflow-hidden">
-                          <div className="h-full bg-[#25D366]" style={{ width: `${log.interescliente}%` }}></div>
-                        </div>
-                        <span className="text-[10px] font-black text-[#54656f]">{log.interescliente}%</span>
-                      </div>
-                    </td>
-                    <td className="px-8 py-5 text-right">
-                      <p className="text-[10px] font-black text-slate-900 uppercase">{log.time}</p>
-                      <p className="text-[9px] text-[#667781] font-bold uppercase">{log.date}</p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* Contenedor Principal Ajustado */}
+      <div className="flex flex-col flex-1 min-h-0 bg-transparent rounded-3xl">
+        {/* Filtros compactos */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6 shrink-0 px-2">
+          <div className="md:col-span-3 relative">
+            <input 
+              type="text" 
+              placeholder="Buscar por nombre o número..." 
+              className="w-full pl-10 pr-4 py-3 bg-white border border-[#d1d7db] rounded-2xl text-xs font-bold focus:ring-2 focus:ring-[#25D366] outline-none transition-all shadow-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#667781]" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </div>
+          <select 
+            className="w-full px-4 py-3 bg-white border border-[#d1d7db] rounded-2xl text-xs font-bold focus:ring-2 focus:ring-[#25D366] outline-none transition-all shadow-sm"
+            value={selectedEtapa}
+            onChange={(e) => setSelectedEtapa(e.target.value)}
+          >
+            <option>Todas</option>
+            <option>Atención</option>
+            <option>Consideración</option>
+            <option>Compra</option>
+            <option>Post-Venta</option>
+          </select>
         </div>
-      )}
+
+        {viewMode === 'whatsapp' ? (
+          <WhatsAppView logs={filteredLogs} onSendMessage={handleSendMessage} />
+        ) : (
+          <div className="bg-white rounded-3xl border border-[#d1d7db] shadow-sm overflow-hidden flex-1 flex flex-col min-h-0">
+            <div className="overflow-auto flex-1">
+              <table className="w-full text-left border-collapse">
+                <thead className="sticky top-0 z-20 bg-[#f0f2f5]">
+                  <tr>
+                    <th className="px-6 py-4 text-[9px] font-black text-[#54656f] uppercase border-b border-[#d1d7db]">Contacto</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-[#54656f] uppercase border-b border-[#d1d7db]">Etapa</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-[#54656f] uppercase border-b border-[#d1d7db]">Último Mensaje</th>
+                    <th className="px-6 py-4 text-[9px] font-black text-[#54656f] uppercase border-b border-[#d1d7db] text-right">Fecha/Hora</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#f0f2f5]">
+                  {filteredLogs.slice().reverse().map((log) => (
+                    <tr key={log.id} className="hover:bg-[#f5f6f6] transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="text-xs font-bold text-slate-900">{log.pushname}</p>
+                        <p className="text-[9px] text-[#667781] font-bold">{log.from}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="px-2 py-0.5 bg-[#dcf8c6] text-[#075e54] text-[8px] font-black uppercase rounded border border-[#c5e1a5]">{log.etapaembudo}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-xs text-[#54656f] truncate max-w-md">{log.body}</p>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <p className="text-[10px] font-bold text-slate-900">{log.time}</p>
+                        <p className="text-[9px] text-[#667781] font-bold">{log.date}</p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

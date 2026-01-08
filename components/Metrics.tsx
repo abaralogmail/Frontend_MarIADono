@@ -135,10 +135,10 @@ const Metrics: React.FC = () => {
           <div className="max-w-xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 bg-[#25D366]/10 rounded-full border border-[#25D366]/20 mb-6">
               <span className="w-2 h-2 bg-[#25D366] rounded-full animate-pulse"></span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#25D366]">Live Efficiency Report</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#25D366]">Reporte de eficiencia</span>
             </div>
-            <h2 className="text-3xl font-black leading-tight mb-4">Maria AI ha resuelto el 84% de las consultas autónomamente.</h2>
-            <p className="text-[#667781] font-medium">Esto representa un ahorro operativo estimado de <span className="text-white font-bold">$4,250 USD</span> este mes mediante la automatización de procesos n8n.</p>
+            <h2 className="text-3xl font-black leading-tight mb-4">MarIADono ha resuelto el 34% de las consultas autónomamente.</h2>
+            <p className="text-[#667781] font-medium">Esto representa un ahorro operativo <span className="text-white font-bold"></span> este mes mediante la automatización de procesos n8n.</p>
           </div>
           <div className="flex items-center space-x-8">
             <div className="text-center">
