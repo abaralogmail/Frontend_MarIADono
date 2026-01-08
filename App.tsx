@@ -8,6 +8,7 @@ import Campaigns from './components/Campaigns';
 import Scheduling from './components/Scheduling';
 import Metrics from './components/Metrics';
 import Segments from './components/Segments';
+import Import from './components/Import';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
@@ -26,6 +27,8 @@ const App: React.FC = () => {
         return <Segments />;
       case 'metrics':
         return <Metrics />;
+      case 'import':
+        return <Import />;
       default:
         return <Dashboard />;
     }
@@ -61,16 +64,6 @@ const App: React.FC = () => {
         }
         ::-webkit-scrollbar-thumb:hover {
           background: #bfc1c2;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(0,0,0,0.1);
-          border-radius: 10px;
         }
       `}</style>
     </div>

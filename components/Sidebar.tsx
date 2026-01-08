@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ViewType } from '../types';
 import { ICONS } from '../constants';
@@ -15,11 +16,14 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
     { id: 'segments' as ViewType, label: 'Segmentación', icon: <ICONS.Users /> },
     { id: 'scheduling' as ViewType, label: 'Horarios', icon: <ICONS.Clock /> },
     { id: 'metrics' as ViewType, label: 'Métricas', icon: <ICONS.Analytics /> },
+    { id: 'import' as ViewType, label: 'Base de Datos', icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    )},
   ];
 
   return (
     <aside className="w-64 bg-[#111b21] h-screen fixed left-0 top-0 text-slate-300 flex flex-col z-20 transition-all duration-300 shadow-2xl border-r border-[#2a3942]">
-      {/* Branding con el Nuevo Logo SVG Externo - Ruta Corregida */}
+      {/* Branding */}
       <div className="p-8 border-b border-[#2a3942] bg-[#202c33]">
         <div className="flex flex-col items-center">
           <div className="relative group mb-4">
@@ -28,24 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
                 src="assets/logo.svg" 
                 alt="MarIADono Logo" 
                 className="w-full h-full object-contain p-2"
-                onError={(e) => {
-                  // Fallback robusto en caso de que el archivo SVG tenga errores internos
-                  e.currentTarget.style.display = 'none';
-                  const fallbackContainer = e.currentTarget.parentElement;
-                  if (fallbackContainer && !fallbackContainer.querySelector('.fallback-svg')) {
-                    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                    svg.setAttribute("viewBox", "0 0 24 24");
-                    svg.setAttribute("class", "w-12 h-12 text-[#075E54] fallback-svg");
-                    svg.setAttribute("fill", "none");
-                    svg.setAttribute("stroke", "currentColor");
-                    svg.setAttribute("stroke-width", "2");
-                    svg.innerHTML = '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.3 8.5 8.5 0 0 1 5 1.5l3.5-1.5Z"/>';
-                    fallbackContainer.appendChild(svg);
-                  }
-                }}
               />
-              
-              {/* Badge Dinámico Interactivo */}
               <div className="absolute bottom-1 right-1 w-10 h-10 bg-white rounded-full border-2 border-slate-100 shadow-xl flex flex-col overflow-hidden">
                 <div className="flex-1 bg-[#075E54] flex items-center justify-center p-0.5">
                   <svg viewBox="0 0 24 24" className="w-full h-full text-white" fill="none" stroke="currentColor" strokeWidth="3">
@@ -59,18 +46,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
                 </div>
               </div>
             </div>
-            {/* Status Online Pulse */}
             <div className="absolute top-1 right-3 w-4 h-4 bg-[#25D366] rounded-full border-2 border-[#111b21] z-10 animate-pulse shadow-[0_0_8px_#25D366]"></div>
           </div>
-          
           <div className="text-center">
             <h1 className="text-xl font-black text-white tracking-tighter leading-none mb-1 uppercase">MarIADono</h1>
             <p className="text-[9px] text-[#25D366] font-black uppercase tracking-[0.2em] mb-2">
               Sistema de Fidelización
             </p>
-            <div className="px-2 py-0.5 bg-[#25D366]/10 border border-[#25D366]/20 rounded text-[8px] text-slate-400 font-bold uppercase tracking-widest">
-              Business Suite
-            </div>
           </div>
         </div>
       </div>
